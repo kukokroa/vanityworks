@@ -1,0 +1,6 @@
+C:\Users\kukok\source\repos\WindowsFormsApp1\VanityWorks.Core\bin\Debug\VanityWorks.Core.dll
+C:\Users\kukok\source\repos\WindowsFormsApp1\VanityWorks.Core\bin\Debug\VanityWorks.Core.pdb
+C:\Users\kukok\source\repos\WindowsFormsApp1\VanityWorks.Core\obj\Debug\VanityWorks.Core.csprojResolveAssemblyReference.cache
+C:\Users\kukok\source\repos\WindowsFormsApp1\VanityWorks.Core\obj\Debug\VanityWorks.Core.csproj.CoreCompileInputs.cache
+C:\Users\kukok\source\repos\WindowsFormsApp1\VanityWorks.Core\obj\Debug\VanityWorks.Core.dll
+C:\Users\kukok\source\repos\WindowsFormsApp1\VanityWorks.Core\obj\Debug\VanityWorks.Core.pdb
