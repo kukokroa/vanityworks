@@ -11,5 +11,7 @@ namespace VanityWorks.Core.Domain
         public User User { get; set; }
         
         public DateTime DateClosed { get; set; }
+
+        public List<InventoryLogEntry> InventoryLogEntries { get; set; }
     }
 }

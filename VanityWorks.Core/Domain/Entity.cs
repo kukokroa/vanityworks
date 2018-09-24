@@ -12,7 +12,7 @@ namespace VanityWorks.Core
 
         public DateTime DateCreated { get; set; }
 
-        public bool Deleted { get; set; }
+        public string Deleted { get; set; }
 
         public DateTime DateDeleted { get; set; }
     }

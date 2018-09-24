@@ -10,3 +10,8 @@ C:\vanity works\master\VanityWorks.Core\obj\Debug\VanityWorks.Core.csprojAssembl
 C:\vanity works\master\VanityWorks.Core\obj\Debug\VanityWorks.Core.csproj.CoreCompileInputs.cache
 C:\vanity works\master\VanityWorks.Core\obj\Debug\VanityWorks.Core.dll
 C:\vanity works\master\VanityWorks.Core\obj\Debug\VanityWorks.Core.pdb
+C:\vanity works\master\VanityWorks.Core\bin\Debug\Google.Protobuf.dll
+C:\vanity works\master\VanityWorks.Core\bin\Debug\MySql.Data.dll
+C:\vanity works\master\VanityWorks.Core\bin\Debug\Google.Protobuf.xml
+C:\vanity works\master\VanityWorks.Core\bin\Debug\MySql.Data.xml
+C:\vanity works\master\VanityWorks.Core\obj\Debug\VanityWorks.Core.csproj.CopyComplete

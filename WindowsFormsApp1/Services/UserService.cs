@@ -73,6 +73,89 @@ namespace WindowsFormsApp1.Services
 
         }
 
+        public static void UpdateItem(Item item)
+        {
+            try
+            {
+                using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
+                {
+                    con.Open();
+                    string query = "";
+
+                    if (item.Id > 0)
+                    {
+
+
+                        query = $"UPDATE item " +
+                        $"SET Name ='{item.Name}', SupplierName='{item.SupplierName}',Unit='{item.Unit}'," +
+                        $"UnitQuantity='{item.UnitQuantity}',UnitQuantityPrice='{(item.UnitQuantityPrice)}'" +
+                        $" WHERE Id = {item.Id}";
+
+                    }
+                    else
+                    {
+                    }
+                    MySqlCommand cmd = new MySqlCommand(query, con);
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                    con.Close();
+                }
+            }
+            catch { }
+
+        }
+        public static void DeleteItem(Item item)
+        {
+            try
+            {
+                using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
+                {
+                    con.Open();
+                    string query = "";
+
+                    if (item.Id > 0)
+                    {
+
+
+                        query = $"UPDATE item " +
+                        $"SET Deleted ='1'" +
+                        $" WHERE Id = {item.Id}";
+
+                    }
+                    else
+                    {
+                    }
+                    MySqlCommand cmd = new MySqlCommand(query, con);
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                    con.Close();
+                }
+            }
+            catch { }
+
+        }
+        public static void InsertItem(Item item)
+        {
+            try
+            {
+                using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
+                {
+                    con.Open();
+                    string query = "";
+
+
+                    query = $"INSERT INTO item(Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,Deleted,DateCreated) " +
+                   $"VALUES('{item.Name}','{item.SupplierName}','{item.Unit}','{item.UnitQuantity}','{item.UnitQuantityPrice}','0','{DateTime.Now.ToString("yyyy-MM-dd")}')";
+
+                    MySqlCommand cmd = new MySqlCommand(query, con);
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                    con.Close();
+                }
+            }
+            catch { }
+        }
+
         public static string MD5Hash(string text)
         {
             MD5 md5 = new MD5CryptoServiceProvider();
