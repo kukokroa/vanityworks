@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Domain\DatabaseHelper.cs" />
     <Compile Include="Domain\Entity.cs" />
+    <Compile Include="Domain\Inventory.cs" />
     <Compile Include="Domain\InventoryLog.cs" />
     <Compile Include="Domain\InventoryLogEntry.cs" />
     <Compile Include="Domain\Item.cs" />

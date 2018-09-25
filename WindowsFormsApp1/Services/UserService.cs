@@ -144,8 +144,8 @@ namespace WindowsFormsApp1.Services
                     string query = "";
 
 
-                    query = $"INSERT INTO item(Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,Deleted,DateCreated) " +
-                   $"VALUES('{item.Name}','{item.SupplierName}','{item.Unit}','{item.UnitQuantity}','{item.UnitQuantityPrice}','0','{DateTime.Now.ToString("yyyy-MM-dd")}')";
+                    query = $"INSERT INTO item(Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,Deleted,DateCreated,Price) " +
+                   $"VALUES('{item.Name}','{item.SupplierName}','{item.Unit}','{item.UnitQuantity}','{item.UnitQuantityPrice}','0','{DateTime.Now.ToString("yyyy-MM-dd")}','{Math.Round(item.UnitQuantityPrice / item.UnitQuantity) }')";
 
                     MySqlCommand cmd = new MySqlCommand(query, con);
                     MySqlDataReader dataReader = cmd.ExecuteReader();
@@ -155,7 +155,26 @@ namespace WindowsFormsApp1.Services
             }
             catch { }
         }
+        public static void InsertInventory(Inventory inventory)
+        {
+            try
+            {
+                using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
+                {
+                    con.Open();
+                    string query = "";
 
+
+                    query = $"INSERT INTO inventory(Name,Price,DateCreated,UnitQuantity) " +
+                   $"VALUES('{inventory.Name}','{inventory.Price}','{DateTime.Now.ToString("yyyy-MM-dd")}','{inventory.UnitQuantity}')";
+                    MySqlCommand cmd = new MySqlCommand(query, con);
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                    con.Close();
+                }
+            }
+            catch { }
+        }
         public static string MD5Hash(string text)
         {
             MD5 md5 = new MD5CryptoServiceProvider();

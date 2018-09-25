@@ -28,16 +28,22 @@ namespace VanityWorks.Forms
             textBox4.Hide();
             textBox5.Hide();
             textBox6.Hide();
+            textBox7.Hide();
+            textBox8.Hide();
+            textBox9.Hide();
+
             label1.Hide();
             label2.Hide();
             label3.Hide();
             label4.Hide();
             label5.Hide();
             label6.Hide();
+            label7.Hide();
             button1.Hide();
             button2.Hide();
             button3.Hide();
             button4.Hide();
+            button5.Hide();
         }
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
@@ -76,23 +82,36 @@ namespace VanityWorks.Forms
 
         private void newOpeningToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dataGridView1.Hide();
-            textBox1.Hide();
-            textBox2.Hide();
-            textBox3.Hide();
+            dataGridView1.Show();
+            textBox1.Show();
+            textBox2.Show();
+            textBox9.Show();
+            button5.Show();
+            textBox2.ReadOnly = true;
+            textBox3.ReadOnly = true;
+            textBox3.Show();
             textBox4.Hide();
-            textBox5.Hide();
+            textBox5.Show();
             textBox6.Hide();
-            label1.Hide();
-            label2.Hide();
-            label3.Hide();
+            label1.Show();
+            label2.Show();
+            label3.Show();
+            label7.Show();
             label4.Hide();
-            label5.Hide();
+            label5.Show();
             label6.Hide();
             button1.Hide();
             button2.Hide();
             button3.Hide();
             button4.Hide();
+  
+            DataTable dt = Select();
+            dataGridView1.AutoResizeRows();
+            dataGridView1.DataSource = dt;
+            dataGridView1.ReadOnly = true;
+            dg.Size = new System.Drawing.Size(550, 288);
+            newButton.BackColor = System.Drawing.Color.White;
+            dg.DataSource = dt;
         }
         public DataTable Select()
         {
@@ -124,9 +143,18 @@ namespace VanityWorks.Forms
 
         private void listToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            textBox1.Clear();
+            textBox2.Clear();
+            textBox3.Clear();
+            textBox4.Clear();
+            textBox5.Clear();
+            textBox6.Clear();
+            textBox9.Hide();
             dataGridView1.Show();
             textBox1.Show();
             textBox2.Show();
+            textBox2.ReadOnly = false;
+            textBox3.ReadOnly = false;
             textBox3.Show();
             textBox4.Show();
             textBox5.Show();
@@ -141,6 +169,7 @@ namespace VanityWorks.Forms
             button2.Show();
             button3.Show();
             button4.Show();
+            button5.Hide();
             DataTable dt = Select();
             dataGridView1.AutoResizeRows();
             dataGridView1.DataSource = dt;
@@ -195,6 +224,9 @@ namespace VanityWorks.Forms
             textBox4.Text = dataGridView1.Rows[rowIndex].Cells[3].Value.ToString();
             textBox5.Text = dataGridView1.Rows[rowIndex].Cells[4].Value.ToString();
             textBox6.Text = dataGridView1.Rows[rowIndex].Cells[5].Value.ToString();
+
+            textBox7.Text = dataGridView1.Rows[rowIndex].Cells[4].Value.ToString();
+            textBox8.Text = dataGridView1.Rows[rowIndex].Cells[6].Value.ToString();
         }
 
         private void button1_Click_2(object sender, EventArgs e)
@@ -221,12 +253,19 @@ namespace VanityWorks.Forms
         {
             try
             {
+                var inventory = new Inventory();
+                inventory.Name = textBox2.Text;
+                inventory.Price = Convert.ToDecimal(textBox6.Text)/ Convert.ToDecimal(textBox5.Text);
+                UserService.InsertInventory(inventory);
+
                 var item = new Item();
                 item.Name = textBox2.Text;
                 item.SupplierName = textBox3.Text;
                 item.Unit = textBox4.Text;
                 item.UnitQuantity = Convert.ToDecimal(textBox5.Text);
                 item.UnitQuantityPrice = Convert.ToDecimal(textBox6.Text);
+               
+
                 UserService.InsertItem(item);
                 DataTable dt = Select();
                 dataGridView1.DataSource = dt;
@@ -263,7 +302,8 @@ namespace VanityWorks.Forms
             textBox4.Hide();
             textBox5.Hide();
             textBox6.Hide();
-          
+            textBox9.Hide();
+            button5.Hide();
             label1.Hide();
             label2.Hide();
             label3.Hide();
@@ -289,6 +329,36 @@ namespace VanityWorks.Forms
         }
 
         private void button5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button5_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Convert.ToDecimal(textBox7.Text) >= Convert.ToDecimal(textBox5.Text))
+                {
+                    var inventory = new Inventory();
+                    inventory.Name = textBox2.Text;
+                    inventory.Price = Convert.ToDecimal(textBox8.Text) * (Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox5.Text));
+                    inventory.UnitQuantity = Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox5.Text);
+                    UserService.InsertInventory(inventory);
+                    DataTable dt = Select();
+                    dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("Entry is to high");
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void textBox7_TextChanged(object sender, EventArgs e)
         {
 
         }

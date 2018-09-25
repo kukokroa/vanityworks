@@ -21,11 +21,12 @@ namespace VanityWorks.Core.Domain
         public decimal UnitQuantity { get; set; }
 
         public decimal UnitQuantityPrice { get; set; } //Actual price : UnitQuantity / UnitQuantityPrice
+        public decimal Price { get; set; }
 
-        public decimal Price()
-        {
-            return UnitQuantityPrice / UnitQuantity;
-        }
+        //public decimal Price()
+        //{
+        //    return UnitQuantityPrice / UnitQuantity;
+        //}
         public DataTable Select()
         {
             MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString());
