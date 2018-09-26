@@ -15,5 +15,6 @@ namespace VanityWorks.Core
         public string Deleted { get; set; }
 
         public DateTime DateDeleted { get; set; }
+        public DateTime DateUpdated { get; set; }
     }
 }
