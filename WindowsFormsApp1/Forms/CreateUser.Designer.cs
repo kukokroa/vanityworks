@@ -182,6 +182,7 @@
             this.grp.TabIndex = 14;
             this.grp.TabStop = false;
             this.grp.Text = "Admin Authorization";
+            this.grp.Enter += new System.EventHandler(this.grp_Enter);
             // 
             // button1
             // 

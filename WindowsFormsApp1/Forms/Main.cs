@@ -26,12 +26,12 @@ namespace VanityWorks.Forms
             textBox2.Hide();
             textBox3.Hide();
             textBox4.Hide();
+            groupBox1.Hide();
             textBox5.Hide();
             textBox6.Hide();
             textBox7.Hide();
             textBox8.Hide();
             textBox9.Hide();
-
             label1.Hide();
             label2.Hide();
             label3.Hide();
@@ -48,6 +48,7 @@ namespace VanityWorks.Forms
             button6.Hide();
             button7.Hide();
             button8.Hide();
+            button9.Hide();
         }
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
@@ -87,11 +88,13 @@ namespace VanityWorks.Forms
         private void newOpeningToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dataGridView1.Show();
+            groupBox1.Show();
             textBox1.Show();
             textBox2.Show();
+            textBox9.Show();
+            textBox9.Text = "0";
             label8.Text="Input Data";
             label8.Show();
-            textBox9.Show();
             button5.Show();
             textBox2.ReadOnly = true;
             textBox3.ReadOnly = true;
@@ -112,14 +115,69 @@ namespace VanityWorks.Forms
             button4.Hide();
             button6.Show();
             button8.Hide();
+            button9.Hide();
             button7.Show();
             DataTable dt = Select();
             dataGridView1.AutoResizeRows();
             dataGridView1.DataSource = dt;
             dataGridView1.ReadOnly = true;
+            dataGridView1.AllowUserToAddRows = false;
             dg.Size = new System.Drawing.Size(550, 288);
             newButton.BackColor = System.Drawing.Color.White;
             dg.DataSource = dt;
+            textBox1.Clear();
+            textBox2.Clear();
+            textBox3.Clear();
+            textBox4.Clear();
+            textBox5.Clear();
+            textBox6.Clear();
+           // textBox9.Clear();
+        }
+        public DataTable SelectAllInventory()
+        {
+            MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString());
+            DataTable dt = new DataTable();
+            try
+            {
+                //string sql = $"Select id,Name,Price,UnitQuantity,DateCreated From inventory"
+                string sql = $"Select sum(UnitQuantity)as Total_Quantity,sum(Price)as Total_Price,DateCreated From inventory Group by DateCreated";
+                MySqlCommand cmd = new MySqlCommand(sql, con);
+                MySqlDataAdapter adapater = new MySqlDataAdapter(cmd);
+                con.Open();
+                adapater.Fill(dt);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                con.Close();
+            }
+            return dt;
+        }
+        public DataTable SelectAllInventoryReport()
+        {
+            MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString());
+            DataTable dt = new DataTable();
+            try
+            {
+                //string sql = $"Select id,Name,Price,UnitQuantity,DateCreated From inventory"
+                string sql = $"Select id,Name,Price,UnitQuantity,DateCreated From inventory Group by DateCreated";
+                MySqlCommand cmd = new MySqlCommand(sql, con);
+                MySqlDataAdapter adapater = new MySqlDataAdapter(cmd);
+                con.Open();
+                adapater.Fill(dt);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                con.Close();
+            }
+            return dt;
         }
         public DataTable Select()
         {
@@ -166,6 +224,29 @@ namespace VanityWorks.Forms
             return dt;
         }
 
+        public DataTable SelectValue(int id)
+        {
+            MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString());
+            DataTable dt = new DataTable();
+            try
+            {
+                string sql = $"Select * From inventory where item_id='{id}'";
+                MySqlCommand cmd = new MySqlCommand(sql, con);
+                MySqlDataAdapter adapater = new MySqlDataAdapter(cmd);
+                con.Open();
+                adapater.Fill(dt);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                con.Close();
+            }
+            return dt;
+        }
+
         public DataTable SelectInF()
         {
             MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString());
@@ -196,8 +277,11 @@ namespace VanityWorks.Forms
 
         private void listToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            groupBox1.Show();
+            button9.Hide();
             button6.Hide();
             button7.Hide();
+            textBox9.Hide();
             button8.Hide();
             textBox1.Clear();
             label8.Text = "Input Data";
@@ -207,7 +291,6 @@ namespace VanityWorks.Forms
             textBox4.Clear();
             textBox5.Clear();
             textBox6.Clear();
-            textBox9.Hide();
             dataGridView1.Show();
             textBox1.Show();
             textBox2.Show();
@@ -234,6 +317,7 @@ namespace VanityWorks.Forms
             dataGridView1.AutoResizeRows();
             
             dataGridView1.DataSource = dt;
+            dataGridView1.AllowUserToAddRows = false;
             dataGridView1.ReadOnly=true;
             dg.Size = new System.Drawing.Size(550, 288);
             newButton.BackColor = System.Drawing.Color.White; 
@@ -294,19 +378,45 @@ namespace VanityWorks.Forms
         {
             try
             {
-                var item = new Item();
-                item.Id = int.Parse(textBox1.Text);
-                item.Name = textBox2.Text;
-                item.SupplierName = textBox3.Text;
-                item.Unit = textBox4.Text;
-                item.UnitQuantity = Convert.ToDecimal(textBox5.Text);
-                item.UnitQuantityPrice = Convert.ToDecimal(textBox6.Text);
-                UserService.UpdateItem(item);
-                DataTable dt = SelectAll();
-                dataGridView1.DataSource = dt;
+                if (textBox1.ToString() != "")
+                {
+                    var item = new Item();
+                    item.Id = int.Parse(textBox1.Text);
+                    item.Name = textBox2.Text;
+                    item.SupplierName = textBox3.Text;
+                    item.Unit = textBox4.Text;
+                    item.UnitQuantity = Convert.ToDecimal(textBox5.Text);
+                    item.UnitQuantityPrice = Convert.ToDecimal(textBox6.Text);
+                    DataTable dtValue = SelectValue(item.Id);
+                    if (dtValue.Rows.Count > 0)
+                    {
+                        DialogResult = MessageBox.Show("Can't update Quantity because it has value in inventory Only Price can be updated",
+                                "Confirmation", MessageBoxButtons.YesNo,  MessageBoxIcon.Information);
+                        if (DialogResult == DialogResult.Yes)
+                        {
+                            MessageBox.Show("Yes");
+                        }
+                        else
+                        {
+                            MessageBox.Show("No");
+                        }
+                    }
+                    else
+                    { 
+                    UserService.UpdateItem(item);
+                    }
+                    DataTable dt = SelectAll();
+                    dataGridView1.AllowUserToAddRows = false;
+                    dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("Please Click a row");
+                }
             }
             catch (Exception)
             {
+                MessageBox.Show("Please Click a row");
             }
         }
 
@@ -314,10 +424,10 @@ namespace VanityWorks.Forms
         {
             try
             {
-                var inventory = new Inventory();
-                inventory.Name = textBox2.Text;
-                inventory.Price = Convert.ToDecimal(textBox6.Text)/ Convert.ToDecimal(textBox5.Text);
-                UserService.InsertInventory(inventory);
+                //var inventory = new Inventory();
+                //inventory.Name = textBox2.Text;
+                //inventory.Price = Convert.ToDecimal(textBox6.Text)/ Convert.ToDecimal(textBox5.Text);
+                //UserService.InsertInventory(inventory);
 
                 var item = new Item();
                 item.Name = textBox2.Text;
@@ -340,26 +450,46 @@ namespace VanityWorks.Forms
         private void button3_Click(object sender, EventArgs e)
         {
             try {
-                var item = new Item();
-                item.Id = int.Parse(textBox1.Text);
-                item.Name = textBox2.Text;
-                item.SupplierName = textBox3.Text;
-                item.Unit = textBox4.Text;
-                item.UnitQuantity = Convert.ToDecimal(textBox5.Text);
-                item.UnitQuantityPrice = Convert.ToDecimal(textBox6.Text);
-                UserService.DeleteItem(item);
-                DataTable dt = SelectAll();
-                dataGridView1.DataSource = dt;
+                if (int.Parse(textBox1.Text) > 0)
+                {
+                    DialogResult = MessageBox.Show("Do you want to Delete it?",
+                                 "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    if (DialogResult == DialogResult.Yes)
+                    {
+                        var item = new Item();
+                        item.Id = int.Parse(textBox1.Text);
+                        item.Name = textBox2.Text;
+                        item.SupplierName = textBox3.Text;
+                        item.Unit = textBox4.Text;
+                        item.UnitQuantity = Convert.ToDecimal(textBox5.Text);
+                        item.UnitQuantityPrice = Convert.ToDecimal(textBox6.Text);
+                        UserService.DeleteItem(item);
+                        DataTable dt = SelectAll();
+                        dataGridView1.AllowUserToAddRows = false;
+                        dataGridView1.DataSource = dt;
+                    }
+                    else
+                    {
+                       // MessageBox.Show("No");
+                    }
+                   
+                }
+                else
+                {
+                    MessageBox.Show("Please Click a row");
+                }
             }
-            catch (Exception) { }
+            catch (Exception) {
+                MessageBox.Show("Please Click a row");
+            }
         }
 
         private void expensesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             button6.Hide();
             button7.Hide();
+            textBox9.Hide();
             button8.Hide();
-            dataGridView1.Hide();
             textBox1.Hide();
             label8.Hide();
             textBox2.Hide();
@@ -367,7 +497,6 @@ namespace VanityWorks.Forms
             textBox4.Hide();
             textBox5.Hide();
             textBox6.Hide();
-            textBox9.Hide();
             button5.Hide();
             label1.Hide();
             label2.Hide();
@@ -376,12 +505,15 @@ namespace VanityWorks.Forms
             label5.Hide();
             label6.Hide();
             label7.Hide();
-
-
             button1.Hide();
             button2.Hide();
             button3.Hide();
             button4.Hide();
+            button9.Show();
+            DataTable dt = SelectAllInventory();
+            groupBox1.Hide();
+            dataGridView1.DataSource = dt;
+            dataGridView1.Show();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -409,18 +541,22 @@ namespace VanityWorks.Forms
                     var item = new Item();
                     item.Id = int.Parse(textBox1.Text);
                     item.UnitQuantity = Convert.ToDecimal(textBox5.Text);
+                    item.newStock = int.Parse(textBox9.Text);
                     item.OldUnitQuantity = Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox5.Text);
+                   // item.UnitQuantityPrice=
                     UserService.UpdateItemIn(item);
 
                     var inventory = new Inventory();
                     inventory.item_id = int.Parse(textBox1.Text);
                     inventory.Name = textBox2.Text;
+                    inventory.newStock = int.Parse(textBox9.Text);
                     inventory.Price = Convert.ToDecimal(textBox8.Text) * (Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox5.Text));
                     inventory.UnitQuantity = Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox5.Text);
                     inventory.OldUnitQuantity = Convert.ToDecimal(textBox7.Text);
                     UserService.InsertInventory(inventory);
                     DataTable dt = Select();
                     dataGridView1.DataSource = dt;
+                    dataGridView1.AllowUserToAddRows = false;
                     textBox1.Clear();
                     textBox2.Clear();
                     textBox3.Clear();
@@ -447,10 +583,10 @@ namespace VanityWorks.Forms
         private void button6_Click(object sender, EventArgs e)
         {
             dataGridView1.Show();
+            dataGridView1.AllowUserToAddRows = false;
             label8.Text = "Input Data";
             textBox1.Show();
             textBox2.Show();
-            textBox9.Show();
             label8.Show();
             button5.Show();
             button8.Hide();
@@ -459,6 +595,8 @@ namespace VanityWorks.Forms
             textBox3.Show();
             textBox4.Hide();
             textBox5.Show();
+            textBox9.Show();
+            textBox9.Text = "0";
             textBox6.Hide();
             label1.Show();
             label2.Show();
@@ -477,15 +615,24 @@ namespace VanityWorks.Forms
             dataGridView1.AutoResizeRows();
             dataGridView1.DataSource = dt;
             dataGridView1.ReadOnly = true;
+            dataGridView1.AllowUserToAddRows = false;
             dg.Size = new System.Drawing.Size(550, 288);
             newButton.BackColor = System.Drawing.Color.White;
             dg.DataSource = dt;
+            textBox1.Clear();
+            textBox2.Clear();
+            textBox3.Clear();
+            textBox4.Clear();
+            textBox5.Clear();
+            textBox6.Clear();
+           // textBox9.Clear();
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
            
             dataGridView1.Show();
+            dataGridView1.AllowUserToAddRows = false;
             textBox1.Show();
             label8.Text = "Change Data";
             label8.Show();
@@ -520,6 +667,14 @@ namespace VanityWorks.Forms
             dg.Size = new System.Drawing.Size(550, 288);
             newButton.BackColor = System.Drawing.Color.White;
             dg.DataSource = dt;
+            textBox1.Clear();
+            textBox2.Clear();
+            textBox3.Clear();
+            textBox4.Clear();
+            textBox5.Clear();
+            textBox6.Clear();
+            textBox9.Text = "0";
+            // textBox9.Clear();
         }
 
         private void reportsToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -529,23 +684,102 @@ namespace VanityWorks.Forms
 
         private void button8_Click(object sender, EventArgs e)
         {
-            var inventory = new Inventory();
-            inventory.item_id = int.Parse(textBox1.Text);
-            inventory.Name = textBox2.Text;
-            inventory.Price = Convert.ToDecimal(textBox8.Text) * (Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox5.Text));
-            inventory.UnitQuantity =Convert.ToDecimal(textBox5.Text);
-            inventory.OldUnitQuantity = Convert.ToDecimal(textBox7.Text);
-            UserService.UpdateInventory(inventory);
+            try
+            {
+                if (Convert.ToDecimal(textBox7.Text) >= Convert.ToDecimal(textBox5.Text))
+                {
+                    var inventory = new Inventory();
+                    inventory.item_id = int.Parse(textBox1.Text);
+                    inventory.Name = textBox2.Text;
 
-            var item = new Item();
-            item.Id = int.Parse(textBox1.Text);
-            item.UnitQuantity = Convert.ToDecimal(textBox5.Text);
-            item.UnitQuantityPrice = Convert.ToDecimal(textBox6.Text);
-            UserService.UpdateItemQuantity(item);
-            DataTable dt = SelectInF();
-            dataGridView1.AutoResizeRows();
-            dataGridView1.DataSource = dt;
-            dataGridView1.ReadOnly = true;
+                    inventory.newStock = int.Parse(textBox9.Text);
+                    inventory.Price = Convert.ToDecimal(textBox8.Text) * (Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox5.Text));
+                    inventory.UnitQuantity = Convert.ToDecimal(textBox5.Text);
+                    inventory.OldUnitQuantity = Convert.ToDecimal(textBox7.Text);
+                    UserService.UpdateInventory(inventory);
+
+                    var item = new Item();
+                    item.Id = int.Parse(textBox1.Text);
+                    item.newStock = int.Parse(textBox9.Text);
+                    item.UnitQuantity = Convert.ToDecimal(textBox5.Text);
+                    item.UnitQuantityPrice = Convert.ToDecimal(textBox6.Text);
+                    UserService.UpdateItemQuantity(item);
+                    DataTable dt = SelectInF();
+
+
+
+                    dataGridView1.AutoResizeRows();
+                    dataGridView1.DataSource = dt;
+                    dataGridView1.AllowUserToAddRows = false;
+
+                    dataGridView1.ReadOnly = true;
+                }
+                else
+                {
+                    MessageBox.Show("Entry is to high");
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox9_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            DataTable dt = SelectAllInventoryReport();
+            string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string filePaths = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string extension = DateTime.Now.ToString("yyyy-MM-dd")+".csv";
+            filePath += @"\VanityWorks\" + extension;
+            filePaths += @"\VanityWorks";
+            if (System.IO.File.Exists(filePaths))
+            {
+                try
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                catch (Exception )
+                {
+                }
+               
+            }
+            else
+            {
+                try
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                catch (Exception)
+                {
+                }
+
+                System.IO.Directory.CreateDirectory(filePaths);
+                  }
+            StringBuilder csvContent = new StringBuilder();
+          
+                 csvContent.AppendLine("id, Name,UnitQuantity ,Price , Date_Sold");
+            foreach (DataRow row in dt.Rows)
+            {
+                csvContent.AppendLine(row["id"].ToString() +','+ row["Name"].ToString() + ',' + row["UnitQuantity"].ToString() + ',' + row["Price"].ToString() + ',' + row["DateCreated"].ToString());
+            }
+            System.IO.File.AppendAllText(filePath, csvContent.ToString());
+            MessageBox.Show("Successfully Exported");
         }
     }
 }

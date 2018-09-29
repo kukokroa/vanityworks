@@ -118,7 +118,7 @@ namespace WindowsFormsApp1.Services
                     if (item.Id > 0)
                     {
                         query = $"UPDATE item " +
-                        $"SET DateUpdated='{DateTime.Now.ToString("yyyy-MM-dd")}',UnitQuantity='{item.UnitQuantity}',OldUnitQuantity='{item.OldUnitQuantity}'" +
+                        $"SET UnitQuantityPrice=(UnitQuantityPrice/UnitQuantity) * '{item.UnitQuantity + item.newStock}',DateUpdated='{DateTime.Now.ToString("yyyy-MM-dd")}',UnitQuantity='{item.UnitQuantity + item.newStock}',OldUnitQuantity='{item.OldUnitQuantity}',newStock='{item.newStock}'" +
                         $" WHERE Id = {item.Id}";
 
                     }
@@ -147,7 +147,7 @@ namespace WindowsFormsApp1.Services
                     if (item.Id > 0)
                     {
                         query = $"UPDATE item " +
-                        $"SET UnitQuantity= '{item.UnitQuantity}'" +
+                        $"SET UnitQuantityPrice=(UnitQuantityPrice/UnitQuantity) * '{item.UnitQuantity + item.newStock} - newStock',UnitQuantity='{item.UnitQuantity + item.newStock}' " +
                         $" WHERE Id = {item.Id}";
 
                     }
@@ -243,9 +243,9 @@ namespace WindowsFormsApp1.Services
                 {
                     con.Open();
                     string query = "";
-
+                    //Price=(Price/UnitQuantity) *(OldUnitQuantity -'{inventory.UnitQuantity }')
                     query = $"UPDATE inventory " +
-                  $"SET UnitQuantity=UnitQuantity +'{inventory.UnitQuantity }', Price='{inventory.Price }'" +
+                  $"SET Price={inventory.Price} , UnitQuantity=OldUnitQuantity -'{inventory.UnitQuantity }'" +
                   $" WHERE item_id = {inventory.item_id} and DateCreated='{DateTime.Now.ToString("yyyy-MM-dd")}'";
                     MySqlCommand cmd = new MySqlCommand(query, con);
                     MySqlDataReader dataReader = cmd.ExecuteReader();
