@@ -20,6 +20,16 @@ C:\Users\kukok\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsF
 C:\Users\kukok\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Forms.CreateUser.resources
 C:\Users\kukok\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\VanityWorks.Properties.Resources.resources
 C:\Users\kukok\source\repos\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\VanityWorks.Forms.Main.resources
+C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.csprojAssemblyReference.cache
+C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.exe.config
+C:\vanity works\master\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Forms.CreateUser.resources
+C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.Forms.Items.resources
+C:\vanity works\master\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Login.resources
+C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.Forms.newStock.resources
+C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.Forms.Main.resources
+C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.Properties.Resources.resources
+C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.csproj.GenerateResource.cache
+C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.csproj.CoreCompileInputs.cache
 C:\vanity works\master\WindowsFormsApp1\bin\Debug\VanityWorks.exe.config
 C:\vanity works\master\WindowsFormsApp1\bin\Debug\VanityWorks.exe
 C:\vanity works\master\WindowsFormsApp1\bin\Debug\VanityWorks.pdb
@@ -139,15 +149,6 @@ C:\vanity works\master\WindowsFormsApp1\bin\Debug\System.Numerics.Vectors.xml
 C:\vanity works\master\WindowsFormsApp1\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\vanity works\master\WindowsFormsApp1\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\vanity works\master\WindowsFormsApp1\bin\Debug\VanityWorks.Core.pdb
-C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.csprojAssemblyReference.cache
-C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.exe.config
-C:\vanity works\master\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Forms.CreateUser.resources
-C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.Forms.Items.resources
-C:\vanity works\master\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Login.resources
-C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.Forms.Main.resources
-C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.Properties.Resources.resources
-C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.csproj.GenerateResource.cache
-C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.csproj.CoreCompileInputs.cache
 C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.csproj.CopyComplete
 C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.exe
 C:\vanity works\master\WindowsFormsApp1\obj\Debug\VanityWorks.pdb

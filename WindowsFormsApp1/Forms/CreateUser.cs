@@ -29,8 +29,8 @@ namespace WindowsFormsApp1.Forms
             if (txtBoxPassword.Text == txtBoxConfirmPassword.Text)
             {
                 var adminUser = UserService.GetUserByEmailAndPassword(txtBoxAdminEmailAddress.Text, txtBoxAdminPassword.Text);
-
-                if (adminUser != null && adminUser.Admin)
+            
+                 if (adminUser != null && adminUser.Admin)
                 {
                     var user = new User();
                     user.FirstName = txtBoxFirstName.Text;
