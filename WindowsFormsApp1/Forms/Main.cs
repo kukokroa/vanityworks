@@ -681,6 +681,7 @@ namespace VanityWorks.Forms
 
         private void button6_Click(object sender, EventArgs e)
         {
+            button10.Show();
             dataGridView1.Show();
             dataGridView1.AllowUserToAddRows = false;
             label8.Text = "Input Data";
