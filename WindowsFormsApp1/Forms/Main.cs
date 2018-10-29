@@ -142,10 +142,14 @@ namespace VanityWorks.Forms
                 button10.Show();
                 DataTable dt = Select();
                 dataGridView1.AutoResizeRows();
+                dataGridView1.DataSource = null;
+                dataGridView1.Rows.Clear();
                 dataGridView1.DataSource = dt;
                 dataGridView1.ReadOnly = true;
                 dataGridView1.AllowUserToAddRows = false;
                 dg.Size = new System.Drawing.Size(550, 288);
+              
+                dataGridView1.Columns[7].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 newButton.BackColor = System.Drawing.Color.White;
                 dg.DataSource = dt;
                 textBox1.Clear();
@@ -391,10 +395,10 @@ namespace VanityWorks.Forms
             label5.Show();
             label6.Show();
             label7.Hide();
-            button1.Show();
             button2.Show();
-            button3.Show();
-            button4.Show();
+            button1.Hide();
+            button3.Hide();
+            button4.Hide();
             button5.Hide();
             button10.Hide();
             DataTable dt = SelectAll();
@@ -472,25 +476,22 @@ namespace VanityWorks.Forms
                     item.SupplierName = textBox3.Text;
                     item.Unit = textBox4.Text;
                     item.UnitQuantity = Convert.ToDecimal(textBox5.Text);
-                 //   item.UnitQuantityPrice = Convert.ToDecimal(textBox6.Text);
+                  item.UnitQuantityPrice = Convert.ToDecimal(textBox6.Text);
                     DataTable dtValue = SelectValue(item.Id);
-                    if (dtValue.Rows.Count > 0)
+                    if (dtValue.Rows.Count == 0)
                     {
-                        DialogResult = MessageBox.Show("Can't update Quantity because it has value in inventory Only Price can be updated",
+                        DialogResult = MessageBox.Show("Are you sure you want to update this item?",
                                 "Confirmation", MessageBoxButtons.YesNo,  MessageBoxIcon.Information);
                         if (DialogResult == DialogResult.Yes)
                         {
-                      //      MessageBox.Show("Yes");
+                            UserService.UpdateItem(item);
                         }
                         else
                         {
                          //   MessageBox.Show("No");
                         }
                     }
-                    else
-                    { 
-                    UserService.UpdateItem(item);
-                    }
+                    
                     DataTable dt = SelectAll();
                     dataGridView1.AllowUserToAddRows = false;
                     dataGridView1.DataSource = dt;
@@ -553,6 +554,15 @@ namespace VanityWorks.Forms
                         DataTable dt = SelectAll();
                         dataGridView1.AllowUserToAddRows = false;
                         dataGridView1.DataSource = dt;
+                        textBox1.Clear();
+                        textBox2.Clear();
+                        textBox3.Clear();
+                        textBox4.Clear();
+                        textBox5.Clear();
+                        textBox6.Clear();
+                        button1.Hide();
+                        button3.Hide();
+                        button4.Hide();
                     }
                     else
                     {
@@ -621,6 +631,9 @@ namespace VanityWorks.Forms
             textBox4.Clear();
             textBox5.Clear();
             textBox6.Clear();
+            button1.Hide();
+            button3.Hide();
+            button4.Hide();
 
         }
 
@@ -895,7 +908,21 @@ namespace VanityWorks.Forms
             textBox1.Text = dataGridView1.Rows[rowIndex].Cells[0].Value.ToString();
             textBox2.Text = dataGridView1.Rows[rowIndex].Cells[1].Value.ToString();
             textBox3.Text = dataGridView1.Rows[rowIndex].Cells[2].Value.ToString();
-            if (dataGridView1.Columns.Count > 3)
+                if (dataGridView1.Columns.Count == 6)
+                {
+                    string availableUpdate =UserService.UpdateAvailable(textBox1.Text);
+                    button1.Show();
+                    button3.Show();
+                    button4.Show();
+                    if (availableUpdate == "no")
+                    {
+                        button1.Enabled = false;
+                    }
+                    else { button1.Enabled = true; }
+                  
+                }
+     
+                    if (dataGridView1.Columns.Count > 3)
                 {
                     string uPrice = UserService.GetPriceItem(textBox1.Text);
                   
@@ -913,7 +940,8 @@ namespace VanityWorks.Forms
 
                 }
             else { textBox8.Text = "0"; }
-            }
+            
+            }   
         }
 
         private void currentOpeningToolStripMenuItem_Click(object sender, EventArgs e)
@@ -956,10 +984,13 @@ namespace VanityWorks.Forms
                 button10.Show();
                 DataTable dt = Select();
                 dataGridView1.AutoResizeRows();
+                dataGridView1.DataSource = null;
+                dataGridView1.Rows.Clear();
                 dataGridView1.DataSource = dt;
                 dataGridView1.ReadOnly = true;
                 dataGridView1.AllowUserToAddRows = false;
                 dg.Size = new System.Drawing.Size(550, 288);
+                dataGridView1.Columns[7].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 newButton.BackColor = System.Drawing.Color.White;
                 dg.DataSource = dt;
                 textBox1.Clear();

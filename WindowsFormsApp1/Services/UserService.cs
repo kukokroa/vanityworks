@@ -72,6 +72,7 @@ namespace WindowsFormsApp1.Services
                 con.Close();
             }
         }
+
         public static string GetisLogin()
         {
             using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
@@ -96,6 +97,35 @@ namespace WindowsFormsApp1.Services
                 return "0";
             }
        
+        }
+        public static string UpdateAvailable(string id)
+        {
+            using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
+            {
+                con.Open();
+                string query = "";
+                query = $"Select * From item join inventoryentry on item.id = inventoryentry.item_id where item.id='{id}' limit 1";
+                MySqlCommand cmd = new MySqlCommand(query, con);
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    string user = dataReader["Id"].ToString();
+
+
+                    con.Close();
+                    if (user != null)
+                    {
+                        return "no";
+                    }
+                    else
+                    {
+                        return "yes";
+                    }
+                }
+                con.Close();
+                return "yes";
+            }
         }
         public static string GetIDinventory()
         {
@@ -194,8 +224,8 @@ namespace WindowsFormsApp1.Services
                         //$" WHERE Id = {item.Id} and DateCreated='{DateTime.Now.ToString("yyyy-MM-dd")}'";
                         query = $"UPDATE item " +
                     $"SET Name ='{item.Name}', SupplierName='{item.SupplierName}',Unit='{item.Unit}'," +
-                    $"UnitQuantity='{item.UnitQuantity}'" +
-                    $" WHERE Id = {item.Id} and DateCreated='{DateTime.Now.ToString("yyyy-MM-dd")}'";
+                    $"UnitQuantity='{item.UnitQuantity}',UnitQuantityPrice='{item.UnitQuantityPrice}',DateCreated='{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}'" +
+                    $" WHERE Id = {item.Id}";
                     }
                     else
                     {
@@ -328,7 +358,7 @@ namespace WindowsFormsApp1.Services
 
 
                     query = $"INSERT INTO item(Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,Deleted,DateCreated,Price,DateUpdated) " +
-                   $"VALUES('{item.Name}','{item.SupplierName}','{item.Unit}','{item.UnitQuantity}','{item.UnitQuantityPrice}','0','{DateTime.Now.ToString("yyyy-MM-dd")}','{Math.Round(item.UnitQuantityPrice / item.UnitQuantity) }','{DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")}')";
+                   $"VALUES('{item.Name}','{item.SupplierName}','{item.Unit}','{item.UnitQuantity}','{item.UnitQuantityPrice}','0','{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}','{Math.Round(item.UnitQuantityPrice / item.UnitQuantity) }','{DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")}')";
 
                     MySqlCommand cmd = new MySqlCommand(query, con);
                     MySqlDataReader dataReader = cmd.ExecuteReader();
