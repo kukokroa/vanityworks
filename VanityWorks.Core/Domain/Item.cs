@@ -18,8 +18,7 @@ namespace VanityWorks.Core.Domain
 
         public string Unit { get; set; } //kg, mL, L, g
 
-        public decimal UnitQuantity { get; set; }                   
-        public decimal OldUnitQuantity { get; set; }
+        public decimal UnitQuantity { get; set; }         
        public decimal newStock { get; set; }
 
         public decimal UnitQuantityPrice { get; set; } //Actual price : UnitQuantity / UnitQuantityPrice

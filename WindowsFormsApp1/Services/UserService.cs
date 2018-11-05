@@ -104,7 +104,7 @@ namespace WindowsFormsApp1.Services
             {
                 con.Open();
                 string query = "";
-                query = $"Select * From item join inventoryentry on item.id = inventoryentry.item_id where item.id='{id}' limit 1";
+                query = $"Select * From item join inventoryentry on item.Id = inventoryentry.ItemId where item.Id='{id}' limit 1";
                 MySqlCommand cmd = new MySqlCommand(query, con);
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
@@ -249,7 +249,7 @@ namespace WindowsFormsApp1.Services
                     con.Open();
                     string query = "";
                         query = $"UPDATE item " +
-                        $"SET UnitQuantityPrice=(UnitQuantityPrice/UnitQuantity) * (UnitQuantity +  '{stock}'),UnitQuantity=UnitQuantity +'{stock}',DateUpdated='{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}',newStock='{stock}'" +
+                        $"SET UnitQuantityPrice=(UnitQuantityPrice/UnitQuantity) * (UnitQuantity +  '{stock}'),UnitQuantity=UnitQuantity +'{stock}',DateUpdated='{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}'" +
                         $" WHERE Id = {id}";
                     MySqlCommand cmd = new MySqlCommand(query, con);
                     MySqlDataReader dataReader = cmd.ExecuteReader();
@@ -272,7 +272,8 @@ namespace WindowsFormsApp1.Services
                     if (item.Id > 0)
                     {
                         query = $"UPDATE item " +
-                        $"SET UnitQuantityPrice=(UnitQuantityPrice/UnitQuantity) * '{item.UnitQuantity + item.newStock}',DateUpdated='{DateTime.Now.ToString("yyyy-MM-dd")}',UnitQuantity='{item.UnitQuantity + item.newStock}',OldUnitQuantity='{item.OldUnitQuantity}',newStock='{item.newStock}',inventoryid={idinvent}" +
+                      //  $"SET UnitQuantityPrice=(UnitQuantityPrice/UnitQuantity) * '{item.UnitQuantity + item.newStock}',DateUpdated='{DateTime.Now.ToString("yyyy-MM-dd")}',UnitQuantity='{item.UnitQuantity + item.newStock}',OldUnitQuantity='{item.OldUnitQuantity}',newStock='{item.newStock}',inventoryid={idinvent}" +
+                        $"SET UnitQuantityPrice=(UnitQuantityPrice/UnitQuantity) * '{item.UnitQuantity}',DateUpdated='{DateTime.Now.ToString("yyyy-MM-dd")}',UnitQuantity='{item.UnitQuantity }'" +
                         $" WHERE Id = {item.Id}";
 
                     }
@@ -357,8 +358,8 @@ namespace WindowsFormsApp1.Services
                     string query = "";
 
 
-                    query = $"INSERT INTO item(Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,Deleted,DateCreated,Price,DateUpdated) " +
-                   $"VALUES('{item.Name}','{item.SupplierName}','{item.Unit}','{item.UnitQuantity}','{item.UnitQuantityPrice}','0','{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}','{Math.Round(item.UnitQuantityPrice / item.UnitQuantity) }','{DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")}')";
+                    query = $"INSERT INTO item(Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,Deleted,DateCreated,DateUpdated) " +
+                   $"VALUES('{item.Name}','{item.SupplierName}','{item.Unit}','{item.UnitQuantity}','{item.UnitQuantityPrice}','0','{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}','{DateTime.Now.ToString("yyyy-MM-dd")}')";
 
                     MySqlCommand cmd = new MySqlCommand(query, con);
                     MySqlDataReader dataReader = cmd.ExecuteReader();
@@ -368,7 +369,7 @@ namespace WindowsFormsApp1.Services
             }
             catch { }
         }
-        public static void InsertInventory(Inventory inventory, string id2)
+        public static void InsertInventory(InventoryEntry inventory, string id2)
         {
             try
             {
@@ -377,12 +378,10 @@ namespace WindowsFormsApp1.Services
                     con.Open();
                     string query = "";
                  
-
-                    query = $"INSERT INTO inventoryentry(Price,DateCreated,UnitQuantity,OldUnitQuantity,item_id,inventoryid) " +
-                   $"VALUES('{inventory.Price}','{DateTime.Now.ToString("yyyy-MM-dd")}','{inventory.UnitQuantity}','{inventory.OldUnitQuantity}','{inventory.item_id}',{id2})";
+                    query = $"INSERT INTO inventoryentry(DateCreated,Quantity,ItemId,InventoryId,InventoryLogEntryType) " +
+                   $"VALUES('{DateTime.Now.ToString("yyyy-MM-dd")}','{inventory.Quantity}','{inventory.ItemId}','{id2}','{inventory.InventoryLogEntryType}')";
                     MySqlCommand cmd = new MySqlCommand(query, con);
                     MySqlDataReader dataReader = cmd.ExecuteReader();
-
                     con.Close();
                 }
             }
@@ -432,25 +431,25 @@ namespace WindowsFormsApp1.Services
             }
             catch { }
         }
-        public static void UpdateInventory(Inventory inventory)
+        public static void UpdateInventory(InventoryEntry inventory)
         {
-            try
-            {
-                using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
-                {
-                    con.Open();
-                    string query = "";
-                    //Price=(Price/UnitQuantity) *(OldUnitQuantity -'{inventory.UnitQuantity }')
-                    query = $"UPDATE inventoryentry " +
-                  $"SET Price={inventory.Price} , UnitQuantity=OldUnitQuantity -'{inventory.UnitQuantity }'" +
-                  $" WHERE item_id = {inventory.item_id} and DateCreated='{DateTime.Now.ToString("yyyy-MM-dd")}'";
-                    MySqlCommand cmd = new MySqlCommand(query, con);
-                    MySqlDataReader dataReader = cmd.ExecuteReader();
+            //try
+            //{
+            //    using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
+            //    {
+            //        con.Open();
+            //        string query = "";
+            //        //Price=(Price/UnitQuantity) *(OldUnitQuantity -'{inventory.UnitQuantity }')
+            //        query = $"UPDATE inventoryentry " +
+            //      //$"SET Price={inventory.Price} , UnitQuantity=OldUnitQuantity -'{inventory.UnitQuantity }'" +
+            //      //$" WHERE item_id = {inventory.item_id} and DateCreated='{DateTime.Now.ToString("yyyy-MM-dd")}'";
+            //        MySqlCommand cmd = new MySqlCommand(query, con);
+            //        MySqlDataReader dataReader = cmd.ExecuteReader();
 
-                    con.Close();
-                }
-            }
-            catch { }
+            //        con.Close();
+            //    }
+            //}
+            //catch { }
         }
         public static string MD5Hash(string text)
         {

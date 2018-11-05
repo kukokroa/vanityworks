@@ -52,7 +52,6 @@ namespace VanityWorks.Forms
 
             UserService.UpdateItemStock(label3.Text, int.Parse(textBox1.Text));
             Main mm = new Main();
-
             this.RefreshDgv();
             this.Close();
             this.Hide();

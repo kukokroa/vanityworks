@@ -113,23 +113,27 @@ namespace VanityWorks.Forms
                 groupBox1.Show();
                 textBox1.Show();
                 textBox2.Show();
-                textBox9.Show();
+                textBox9.Hide();
                 textBox9.Text = "0";
-                label8.Text = "Input Data";
+                label8.Text = "Item Details";
                 label8.Show();
                 button5.Show();
+                textBox1.Enabled = false;
+                textBox2.Enabled = false;
+                textBox3.Enabled = false;
                 textBox2.ReadOnly = true;
                 textBox3.ReadOnly = true;
                 textBox3.Show();
-                textBox4.Hide();
-                textBox5.Show();
+                textBox4.Show();
+                label4.Text = "Quantity";
+                textBox5.Hide();
                 textBox6.Hide();
                 label1.Show();
                 label2.Show();
                 label3.Show();
-                label7.Show();
-                label4.Hide();
-                label5.Show();
+                label7.Hide();
+                label4.Show();
+                label5.Hide();
                 label6.Hide();
                 button1.Hide();
                 button2.Hide();
@@ -149,7 +153,8 @@ namespace VanityWorks.Forms
                 dataGridView1.AllowUserToAddRows = false;
                 dg.Size = new System.Drawing.Size(550, 288);
               
-                dataGridView1.Columns[7].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dataGridView1.Columns[7].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
                 newButton.BackColor = System.Drawing.Color.White;
                 dg.DataSource = dt;
                 textBox1.Clear();
@@ -219,8 +224,8 @@ namespace VanityWorks.Forms
             DataTable dt = new DataTable();
             try
             {
-                //string sql = $"Select id,Name,Price,UnitQuantity,DateCreated From inventory"
-                string sql = $"Select sum(UnitQuantity)as Total_Quantity,round(sum(Price),2) as Total_Price,DateCreated From inventoryentry Group by DateCreated";
+                //string sql = $"Select id,Name,Price,UnitQuantity,DateCreated From inventory" round(sum(Price),2)
+                string sql = $"Select sum(Quantity)as Total_Quantity,DateCreated From inventoryentry Group by DateCreated";
                 MySqlCommand cmd = new MySqlCommand(sql, con);
                 MySqlDataAdapter adapater = new MySqlDataAdapter(cmd);
                 con.Open();
@@ -267,13 +272,16 @@ namespace VanityWorks.Forms
          try
             {
                 // string sql = $"Select id,Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,round(sum(UnitQuantityPrice / UnitQuantity),2) as Price,DateCreated From item where Deleted='0' and DateUpdated!='{DateTime.Now.ToString("yyyy-MM-dd")}' or DateUpdated ='DateCreated' Group by id";
-                string sql = $"Select id,Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,round(sum(UnitQuantityPrice / UnitQuantity),2) as Price,DateCreated From item where Deleted='0' and inventoryid !={idinvent} Group by id";
+                // string sql = $"Select item.id,Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,round(sum(UnitQuantityPrice / UnitQuantity),2) as Price,item.DateCreated From item left join inventoryentry on item.Id = inventoryentry.ItemId where item.Deleted='0' and inventoryentry.InventoryId='{idinvent}' Group by item.id";
+                                                                                                                                                      
+                string sql = $"Select item.id,item.Name,item.SupplierName,item.Unit,item.UnitQuantity,item.UnitQuantityPrice,round(UnitQuantityPrice / UnitQuantity,2) as Price,item.DateCreated From item where item.Deleted = '0' and  item.Id not in (select inventoryentry.ItemId from inventoryentry where inventoryentry.InventoryId='{idinvent}')";
+                // string sql = $"Select id,Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,round(sum(UnitQuantityPrice / UnitQuantity),2) as Price,DateCreated From item where Deleted='0' and inventoryid !={idinvent} Group by id";
                 MySqlCommand cmd = new MySqlCommand(sql, con);
                 MySqlDataAdapter adapater = new MySqlDataAdapter(cmd);
                 con.Open();
                 adapater.Fill(dt);
             }
-            catch (Exception ex)
+            catch (Exception ex)    
             {
 
             }
@@ -290,7 +298,7 @@ namespace VanityWorks.Forms
             try
             {
                 //  string sql = $"Select id,Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,round(sum(UnitQuantityPrice / UnitQuantity ) ,2) as Price,DateCreated From item where Deleted='0' Group by id";
-                string sql = $"Select id,Name,SupplierName,Unit,UnitQuantity,DateCreated From item where Deleted='0' Group by id";
+                string sql = $"Select id as ID,Name,SupplierName as 'Supplier Name',Unit,UnitQuantity as 'Unit Quantity',DateCreated as 'Date Created' From item where Deleted='0' Group by id";
 
                 MySqlCommand cmd = new MySqlCommand(sql, con);
                 MySqlDataAdapter adapater = new MySqlDataAdapter(cmd);
@@ -338,7 +346,8 @@ namespace VanityWorks.Forms
             string idinvent = UserService.GetIDinventory();
             try
             {
-                string sql = $"Select id,Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,round(sum(UnitQuantityPrice / UnitQuantity),2) as Price,DateCreated From item where Deleted='0' and inventoryid ={idinvent} Group by id";
+                string sql = $"Select item.id,Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,round(sum(UnitQuantityPrice / UnitQuantity),2) as Price,item.DateCreated From item left join inventoryentry on item.Id = inventoryentry.ItemId where item.Deleted='0' and inventoryentry.InventoryId='{idinvent}' Group by item.id";
+              //  string sql = $"Select id,Name,SupplierName,Unit,UnitQuantity,UnitQuantityPrice,round(UnitQuantityPrice / UnitQuantity,2) as Price,DateCreated From item inner join inventoryentry on inventoryentry.ItemId = item.Id where Deleted='0' and inventoryid ={idinvent} Group by id";
 
                 MySqlCommand cmd = new MySqlCommand(sql, con);
                 MySqlDataAdapter adapater = new MySqlDataAdapter(cmd);
@@ -372,7 +381,7 @@ namespace VanityWorks.Forms
             textBox9.Hide();
             button8.Hide();
             textBox1.Clear();
-            label8.Text = "Input Data";
+            label8.Text = "Item Details";
             label8.Show();
             textBox2.Clear();
             textBox3.Clear();
@@ -380,8 +389,10 @@ namespace VanityWorks.Forms
             textBox5.Clear();
             textBox6.Clear();
             dataGridView1.Show();
+      
             textBox1.Show();
             textBox2.Show();
+            textBox1.Enabled = false;
             textBox2.ReadOnly = false;
             textBox3.ReadOnly = false;
             textBox3.Show();
@@ -392,6 +403,7 @@ namespace VanityWorks.Forms
             label2.Show();
             label3.Show();
             label4.Show();
+            label4.Text = "Unit";
             label5.Show();
             label6.Show();
             label7.Hide();
@@ -410,8 +422,8 @@ namespace VanityWorks.Forms
             dg.Size = new System.Drawing.Size(550, 288);
             newButton.BackColor = System.Drawing.Color.White; 
             dg.DataSource = dt;
-            dataGridView1.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-      
+            dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView1.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
         }
         private void dg_RowHeaderMouseClick()
         {
@@ -522,8 +534,6 @@ namespace VanityWorks.Forms
                 item.Unit = textBox4.Text;
                 item.UnitQuantity = Convert.ToDecimal(textBox5.Text);
                 item.UnitQuantityPrice = Convert.ToDecimal(textBox6.Text);
-               
-
                 UserService.InsertItem(item);
                 DataTable dt = SelectAll();
                 dataGridView1.DataSource = dt;
@@ -545,10 +555,7 @@ namespace VanityWorks.Forms
                     {
                         var item = new Item();
                         item.Id = int.Parse(textBox1.Text);
-                        item.Name = textBox2.Text;
-                        item.SupplierName = textBox3.Text;
-                        item.Unit = textBox4.Text;
-                        item.UnitQuantity = Convert.ToDecimal(textBox5.Text);
+    
                       //  item.UnitQuantityPrice = Convert.ToDecimal(textBox6.Text);
                         UserService.DeleteItem(item);
                         DataTable dt = SelectAll();
@@ -617,7 +624,7 @@ namespace VanityWorks.Forms
             dataGridView1.Rows.Clear();
             dataGridView1.ReadOnly = true;
             dataGridView1.DataSource = dt;
-            dataGridView1.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+          //  dataGridView1.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridView1.Show();
 
 
@@ -646,24 +653,27 @@ namespace VanityWorks.Forms
         {
             try
             {
-                if (Convert.ToDecimal(textBox7.Text) >= Convert.ToDecimal(textBox5.Text))
+                if (Convert.ToDecimal(textBox7.Text) >= Convert.ToDecimal(textBox4.Text))
                 {
                     var item = new Item();
                     item.Id = int.Parse(textBox1.Text);
-                    item.UnitQuantity = Convert.ToDecimal(textBox5.Text);
+                    item.UnitQuantity = Convert.ToDecimal(textBox4.Text);
                     item.newStock = int.Parse(textBox9.Text);
-                    item.OldUnitQuantity = Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox5.Text);
+                
                    // item.UnitQuantityPrice=
 
                     UserService.UpdateItemIn(item);
                   
-                    var inventory = new Inventory();
-                    inventory.item_id = int.Parse(textBox1.Text);
+                    var inventory = new InventoryEntry();
+                    inventory.ItemId = int.Parse(textBox1.Text);
                     inventory.Name = textBox2.Text;
-                    inventory.newStock = int.Parse(textBox9.Text);
-                    inventory.Price = Convert.ToDecimal(textBox8.Text) * (Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox5.Text));
-                    inventory.UnitQuantity = Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox5.Text);
-                    inventory.OldUnitQuantity = Convert.ToDecimal(textBox7.Text);
+                    //inventory.newStock = int.Parse(textBox9.Text);
+                    // inventory.Price = Convert.ToDecimal(textBox8.Text) * (Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox4.Text));
+                    inventory.Quantity = Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox4.Text);
+
+                    //inventory.OldUnitQuantity = Convert.ToDecimal(textBox7.Text);
+                  
+                    inventory.InventoryLogEntryType = InventoryEntry.InventoryLogEntryTypes.LogEntry;
                     UserService.InsertInventory(inventory, UserService.GetIDinventory());
                     DataTable dt = Select();
                     dataGridView1.DataSource = dt;
@@ -683,7 +693,6 @@ namespace VanityWorks.Forms
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -697,26 +706,29 @@ namespace VanityWorks.Forms
             button10.Show();
             dataGridView1.Show();
             dataGridView1.AllowUserToAddRows = false;
-            label8.Text = "Input Data";
+            label8.Text = "Item Details";
             textBox1.Show();
             textBox2.Show();
             label8.Show();
             button5.Show();
             button8.Hide();
             textBox2.ReadOnly = true;
+            textBox2.Enabled = false;
             textBox3.ReadOnly = true;
+            textBox3.Enabled = false;
             textBox3.Show();
-            textBox4.Hide();
-            textBox5.Show();
-            textBox9.Show();
+            textBox4.Show();
+            textBox5.Hide();
+            textBox9.Hide();
             textBox9.Text = "0";
             textBox6.Hide();
             label1.Show();
             label2.Show();
             label3.Show();
-            label7.Show();
-            label4.Hide();
-            label5.Show();
+            label7.Hide();
+            label4.Show();
+            label4.Text = "Quantity";
+            label5.Hide();
             label6.Hide();
             button1.Hide();
             button2.Hide();
@@ -750,22 +762,24 @@ namespace VanityWorks.Forms
             label8.Text = "Change Data";
             label8.Show();
             textBox2.Show();
-            textBox9.Show();
+            textBox9.Hide();
             button5.Hide();
             button8.Show();
             textBox2.ReadOnly = true;
             textBox3.ReadOnly = true;
+            textBox2.Enabled = false;
+            textBox3.Enabled = false;
             textBox3.Show();
-            textBox4.Hide();
-            textBox5.Show();
+            textBox4.Show();
+            textBox5.Hide();
             textBox6.Hide();
             label1.Show();
             label2.Show();
             label3.Show();
-            label7.Show();
-            label4.Hide();
-            label5.Show();
-            
+            label7.Hide();
+            label4.Show();
+            label4.Text = "Quantity";
+            label5.Hide();
             label6.Hide();
             button1.Hide();
             button2.Hide();
@@ -801,14 +815,14 @@ namespace VanityWorks.Forms
             {
                 if (Convert.ToDecimal(textBox7.Text) >= Convert.ToDecimal(textBox5.Text))
                 {
-                    var inventory = new Inventory();
-                    inventory.item_id = int.Parse(textBox1.Text);
+                    var inventory = new InventoryEntry();
+                    inventory.ItemId = int.Parse(textBox1.Text);
                     inventory.Name = textBox2.Text;
 
-                    inventory.newStock = int.Parse(textBox9.Text);
-                    inventory.Price = Convert.ToDecimal(textBox8.Text) * (Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox5.Text));
-                    inventory.UnitQuantity = Convert.ToDecimal(textBox5.Text);
-                    inventory.OldUnitQuantity = Convert.ToDecimal(textBox7.Text);
+                //    inventory.newStock = int.Parse(textBox9.Text);
+                 //   inventory.Price = Convert.ToDecimal(textBox8.Text) * (Convert.ToDecimal(textBox7.Text) - Convert.ToDecimal(textBox5.Text));
+                 //   inventory.UnitQuantity = Convert.ToDecimal(textBox4.Text);
+                //    inventory.OldUnitQuantity = Convert.ToDecimal(textBox7.Text);
                     UserService.UpdateInventory(inventory);
 
                     var item = new Item();
@@ -908,7 +922,8 @@ namespace VanityWorks.Forms
             textBox1.Text = dataGridView1.Rows[rowIndex].Cells[0].Value.ToString();
             textBox2.Text = dataGridView1.Rows[rowIndex].Cells[1].Value.ToString();
             textBox3.Text = dataGridView1.Rows[rowIndex].Cells[2].Value.ToString();
-                if (dataGridView1.Columns.Count == 6)
+             
+                    if (dataGridView1.Columns.Count == 6)
                 {
                     string availableUpdate =UserService.UpdateAvailable(textBox1.Text);
                     button1.Show();
@@ -927,7 +942,11 @@ namespace VanityWorks.Forms
                     string uPrice = UserService.GetPriceItem(textBox1.Text);
                   
                 textBox4.Text = dataGridView1.Rows[rowIndex].Cells[3].Value.ToString();
-                textBox5.Text = dataGridView1.Rows[rowIndex].Cells[4].Value.ToString();
+                    if (dataGridView1.Columns.Count == 8)
+                    {
+                        textBox4.Text = dataGridView1.Rows[rowIndex].Cells[4].Value.ToString();
+                    }
+                    textBox5.Text = dataGridView1.Rows[rowIndex].Cells[4].Value.ToString();
                     textBox6.Text = uPrice;
                 textBox7.Text = dataGridView1.Rows[rowIndex].Cells[4].Value.ToString();
                
@@ -953,23 +972,27 @@ namespace VanityWorks.Forms
                 groupBox1.Show();
                 textBox1.Show();
                 textBox2.Show();
-                textBox9.Show();
+                textBox9.Hide();
                 textBox9.Text = "0";
-                label8.Text = "Input Data";
+                label8.Text = "Item Details";
                 label8.Show();
                 button5.Show();
-                textBox2.ReadOnly = true;
-                textBox3.ReadOnly = true;
+               textBox2.ReadOnly = true;
+               textBox3.ReadOnly = true;
+                textBox1.Enabled = false;
+                textBox2.Enabled = false;
+                textBox3.Enabled = false;
                 textBox3.Show();
-                textBox4.Hide();
-                textBox5.Show();
+                textBox4.Show();
+                textBox5.Hide();
                 textBox6.Hide();
                 label1.Show();
                 label2.Show();
                 label3.Show();
-                label7.Show();
-                label4.Hide();
-                label5.Show();
+                label7.Hide();
+                label4.Show();
+                label4.Text = "Quantity";
+                label5.Hide();
                 label6.Hide();
                 label9.Hide();
                 comboBox1.Hide();
@@ -990,7 +1013,8 @@ namespace VanityWorks.Forms
                 dataGridView1.ReadOnly = true;
                 dataGridView1.AllowUserToAddRows = false;
                 dg.Size = new System.Drawing.Size(550, 288);
-                dataGridView1.Columns[7].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dataGridView1.Columns[7].AutoSizeMode= DataGridViewAutoSizeColumnMode.DisplayedCells;
                 newButton.BackColor = System.Drawing.Color.White;
                 dg.DataSource = dt;
                 textBox1.Clear();
@@ -1102,7 +1126,7 @@ namespace VanityWorks.Forms
                 dataGridView1.Rows.Clear();
                 dataGridView1.ReadOnly = true;
                 dataGridView1.DataSource = dt;
-                dataGridView1.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+              //  dataGridView1.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 dataGridView1.Show();
             }
           

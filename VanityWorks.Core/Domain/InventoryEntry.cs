@@ -6,21 +6,17 @@ using System.Threading.Tasks;
 
 namespace VanityWorks.Core.Domain
 {
-    public class InventoryLogEntry: Entity
+    public class InventoryEntry : Entity
     {
-        public Item Item { get; set; }
-
-        public decimal quantity { get; set; }
-
-        public InventoryLogEntryTypes InventoryLogEntryType { get; set; }
-
-        public InventoryLog InventoryLog { get; set; }
-
+        public string Name { get; set; }
+        public int ItemId { get; set; }
+        public decimal Quantity { get; set; }
         public enum InventoryLogEntryTypes
         {
             LogEntry = 0,
             NewStock = 1
         }
+        public InventoryLogEntryTypes InventoryLogEntryType { get; set; }
     }
-    
+
 }
