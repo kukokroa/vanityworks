@@ -32,6 +32,7 @@
             this.inventoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newOpeningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.currentOpeningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewInventoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.itemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,6 +71,8 @@
             this.button10 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.button11 = new System.Windows.Forms.Button();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -93,7 +96,8 @@
             // 
             this.inventoryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newOpeningToolStripMenuItem,
-            this.currentOpeningToolStripMenuItem});
+            this.currentOpeningToolStripMenuItem,
+            this.viewInventoryToolStripMenuItem});
             this.inventoryToolStripMenuItem.Name = "inventoryToolStripMenuItem";
             this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.inventoryToolStripMenuItem.Text = "Inventory";
@@ -102,16 +106,23 @@
             // newOpeningToolStripMenuItem
             // 
             this.newOpeningToolStripMenuItem.Name = "newOpeningToolStripMenuItem";
-            this.newOpeningToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.newOpeningToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newOpeningToolStripMenuItem.Text = "New opening";
             this.newOpeningToolStripMenuItem.Click += new System.EventHandler(this.newOpeningToolStripMenuItem_Click);
             // 
             // currentOpeningToolStripMenuItem
             // 
             this.currentOpeningToolStripMenuItem.Name = "currentOpeningToolStripMenuItem";
-            this.currentOpeningToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.currentOpeningToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.currentOpeningToolStripMenuItem.Text = "Current opening";
             this.currentOpeningToolStripMenuItem.Click += new System.EventHandler(this.currentOpeningToolStripMenuItem_Click);
+            // 
+            // viewInventoryToolStripMenuItem
+            // 
+            this.viewInventoryToolStripMenuItem.Name = "viewInventoryToolStripMenuItem";
+            this.viewInventoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewInventoryToolStripMenuItem.Text = "View Inventory Logs";
+            this.viewInventoryToolStripMenuItem.Click += new System.EventHandler(this.viewInventoryToolStripMenuItem_Click);
             // 
             // itemsToolStripMenuItem
             // 
@@ -125,7 +136,7 @@
             // listToolStripMenuItem
             // 
             this.listToolStripMenuItem.Name = "listToolStripMenuItem";
-            this.listToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.listToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.listToolStripMenuItem.Text = "List";
             this.listToolStripMenuItem.Click += new System.EventHandler(this.listToolStripMenuItem_Click);
             // 
@@ -200,7 +211,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(14, 144);
+            this.label4.Location = new System.Drawing.Point(14, 170);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(26, 13);
             this.label4.TabIndex = 6;
@@ -209,7 +220,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(14, 171);
+            this.label5.Location = new System.Drawing.Point(14, 140);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(68, 13);
             this.label5.TabIndex = 7;
@@ -269,7 +280,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(26, 62);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(1009, 606);
+            this.dataGridView1.Size = new System.Drawing.Size(1009, 602);
             this.dataGridView1.TabIndex = 17;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
@@ -368,7 +379,7 @@
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 23);
             this.button6.TabIndex = 27;
-            this.button6.Text = "On going";
+            this.button6.Text = "Entry";
             this.button6.UseVisualStyleBackColor = false;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
@@ -380,7 +391,7 @@
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(75, 23);
             this.button7.TabIndex = 28;
-            this.button7.Text = "Finish";
+            this.button7.Text = "Current";
             this.button7.UseVisualStyleBackColor = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
@@ -472,7 +483,7 @@
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(75, 23);
             this.button10.TabIndex = 34;
-            this.button10.Text = "new stock";
+            this.button10.Text = "Recieve";
             this.button10.UseVisualStyleBackColor = false;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
@@ -500,12 +511,36 @@
             this.label9.Text = "Group by:";
             this.label9.Click += new System.EventHandler(this.label9_Click);
             // 
+            // button11
+            // 
+            this.button11.BackColor = System.Drawing.Color.IndianRed;
+            this.button11.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button11.Location = new System.Drawing.Point(270, 28);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(109, 23);
+            this.button11.TabIndex = 37;
+            this.button11.Text = "Close Inventory";
+            this.button11.UseVisualStyleBackColor = false;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
+            // 
+            // listBox1
+            // 
+            this.listBox1.BackColor = System.Drawing.Color.MistyRose;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(26, 62);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(120, 602);
+            this.listBox1.TabIndex = 38;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(1359, 703);
+            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.button11);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button10);
@@ -578,5 +613,8 @@
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ToolStripMenuItem viewInventoryToolStripMenuItem;
     }
 }

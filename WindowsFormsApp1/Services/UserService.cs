@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using VanityWorks.Core.Domain;
+using VanityWorks.Services;
 
 namespace WindowsFormsApp1.Services
 {
@@ -48,6 +49,7 @@ namespace WindowsFormsApp1.Services
                 return null;
             }
         }
+      
 
         public static void isLogin(int id)
         {
@@ -98,60 +100,33 @@ namespace WindowsFormsApp1.Services
             }
        
         }
-        public static string UpdateAvailable(string id)
+      
+        public static string ApproveUpdate(string id)
         {
             using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
             {
                 con.Open();
                 string query = "";
-                query = $"Select * From item join inventoryentry on item.Id = inventoryentry.ItemId where item.Id='{id}' limit 1";
+                query = $"Select InventoryLogEntryType From inventoryentry WHERE InventoryId='{InventoryService.GetIDinventory()}' and ItemId='{id}' limit 1";
                 MySqlCommand cmd = new MySqlCommand(query, con);
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
                 while (dataReader.Read())
                 {
-                    string user = dataReader["Id"].ToString();
-
-
-                    con.Close();
-                    if (user != null)
-                    {
-                        return "no";
-                    }
-                    else
-                    {
-                        return "yes";
-                    }
-                }
-                con.Close();
-                return "yes";
-            }
-        }
-        public static string GetIDinventory()
-        {
-            using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
-            {
-                con.Open();
-                string query = "";
-                query = $"Select * From inventory order by id Desc limit 1";
-                MySqlCommand cmd = new MySqlCommand(query, con);
-                MySqlDataReader dataReader = cmd.ExecuteReader();
-
-                while (dataReader.Read())
-                {
-                    string user = dataReader["Id"].ToString();
+                    string user = dataReader["InventoryLogEntryType"].ToString();
 
 
                     con.Close();
 
                     return user;
                 }
-
                 con.Close();
                 return "0";
             }
 
         }
+     
+    
         public static string GetPriceItem(string id)
         {
             using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
@@ -246,14 +221,16 @@ namespace WindowsFormsApp1.Services
             {
                 using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
                 {
+                   
                     con.Open();
                     string query = "";
-                        query = $"UPDATE item " +
-                        $"SET UnitQuantityPrice=(UnitQuantityPrice/UnitQuantity) * (UnitQuantity +  '{stock}'),UnitQuantity=UnitQuantity +'{stock}',DateUpdated='{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}'" +
-                        $" WHERE Id = {id}";
+                    query = $"INSERT INTO inventoryentry(DateCreated,Quantity,ItemId,InventoryId,InventoryLogEntryType) " +
+                  $"values('{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}',{stock},{id},{InventoryService.GetIDinventory()},'1') ";
+                    //query = $"UPDATE item " +
+                    //$"SET UnitQuantityPrice=(UnitQuantityPrice/UnitQuantity) * (UnitQuantity +  '{stock}'),UnitQuantity=UnitQuantity +'{stock}',DateUpdated='{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}'" +
+                    //$" WHERE Id = {id}";
                     MySqlCommand cmd = new MySqlCommand(query, con);
                     MySqlDataReader dataReader = cmd.ExecuteReader();
-
                     con.Close();
                 }
             }
@@ -268,7 +245,7 @@ namespace WindowsFormsApp1.Services
                 {
                     con.Open();
                     string query = "";
-                    string idinvent = UserService.GetIDinventory();
+                    string idinvent = InventoryService.GetIDinventory();
                     if (item.Id > 0)
                     {
                         query = $"UPDATE item " +
@@ -290,7 +267,7 @@ namespace WindowsFormsApp1.Services
 
         }
 
-        public static void UpdateItemQuantity(Item item)
+        public static void UpdateItemQuantity(Item item, string entrytype)
         {
             try
             {
@@ -301,13 +278,9 @@ namespace WindowsFormsApp1.Services
 
                     if (item.Id > 0)
                     {
-                        query = $"UPDATE item " +
-                        $"SET UnitQuantityPrice=(UnitQuantityPrice/UnitQuantity) * '{item.UnitQuantity + item.newStock} - newStock',UnitQuantity='{item.UnitQuantity + item.newStock}' " +
-                        $" WHERE Id = {item.Id}";
-
-                    }
-                    else
-                    {
+                        query = $"UPDATE inventoryentry " +
+                        $"SET Quantity='{item.UnitQuantity}' " +
+                        $" WHERE ItemId = {item.Id} and InventoryId={InventoryService.GetIDinventory()} and InventoryLogEntryType={entrytype}";
                     }
                     MySqlCommand cmd = new MySqlCommand(query, con);
                     MySqlDataReader dataReader = cmd.ExecuteReader();
@@ -369,6 +342,7 @@ namespace WindowsFormsApp1.Services
             }
             catch { }
         }
+   
         public static void InsertInventory(InventoryEntry inventory, string id2)
         {
             try
@@ -379,7 +353,12 @@ namespace WindowsFormsApp1.Services
                     string query = "";
                  
                     query = $"INSERT INTO inventoryentry(DateCreated,Quantity,ItemId,InventoryId,InventoryLogEntryType) " +
-                   $"VALUES('{DateTime.Now.ToString("yyyy-MM-dd")}','{inventory.Quantity}','{inventory.ItemId}','{id2}','{inventory.InventoryLogEntryType}')";
+                $"VALUES('{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}','{inventory.Quantity}','{inventory.ItemId}','{id2}','{inventory.InventoryLogEntryType}')";
+
+               //     query = $"UPDATE inventoryentry " +
+               //$"SET Quantity='{inventory.Quantity}'" +
+               //$" WHERE ItemId = '{inventory.ItemId}' and InventoryLogEntryType='0' and InventoryId ='{id2}'";
+
                     MySqlCommand cmd = new MySqlCommand(query, con);
                     MySqlDataReader dataReader = cmd.ExecuteReader();
                     con.Close();
@@ -391,7 +370,9 @@ namespace WindowsFormsApp1.Services
         {
             try
             {
+             
                 CloseInventory();
+                InventoryentryService.InsertInventoryClosed0();
                 using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
                 {
                     con.Open();
@@ -401,6 +382,8 @@ namespace WindowsFormsApp1.Services
                    $"VALUES('{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}','0','"+id+"')";
                     MySqlCommand cmd = new MySqlCommand(query, con);
                     MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                
 
                     con.Close();
                 }
@@ -412,17 +395,14 @@ namespace WindowsFormsApp1.Services
         {
             try
             {
-              string id  = GetIDinventory();
+              string id  = InventoryService.GetIDinventory();
                 using (MySqlConnection con = new MySqlConnection(DatabaseHelper.GetSQLiteConnectionString()))
                 {
                     con.Open();
                     string query = "";
-                    //Price=(Price/UnitQuantity) *(OldUnitQuantity -'{inventory.UnitQuantity }')
                     query = $"UPDATE inventory " +
                   $"SET DateClosed='{DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}'" +
-                  $" WHERE id = {id} ";
-
-
+                  $" WHERE id = {id} and DateClosed ='0000-00-00 00:00:00'";
                     MySqlCommand cmd = new MySqlCommand(query, con);
                     MySqlDataReader dataReader = cmd.ExecuteReader();
 

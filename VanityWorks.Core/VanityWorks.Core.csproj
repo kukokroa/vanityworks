@@ -57,6 +57,7 @@
     <Compile Include="Domain\DatabaseHelper.cs" />
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\InventoryEntry.cs" />
+    <Compile Include="Domain\ComboboxItem.cs" />
     <Compile Include="Domain\Item.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
